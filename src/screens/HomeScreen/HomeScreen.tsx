@@ -36,7 +36,7 @@ const HomeScreen = React.memo(() => {
 
     return (
       <TouchableOpacity>
-        <Text style={{ color: 'white', opacity: .7 }}>More</Text>
+        <Text style={{ color: 'white', opacity: .7 }}>More:</Text>
 
       </TouchableOpacity>
     );
@@ -108,8 +108,9 @@ const HomeScreen = React.memo(() => {
           <View style={{ marginTop: 25 }}>
             <ListItem>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Modi qui dolore, totam natus magni alias suscipit quia eum nihil! Consectetur incidunt laboriosam facere labore quos possimus in animi culpa quam?</ListItem>
             <ListItem>Rob is the goat</ListItem>
+            <ListItem>Rob is the goa</ListItem>
             <ListItem>Rob is the goat</ListItem>
-            <ListItem>Rob is the goat</ListItem>
+            <ListItem>Rob is the goererererer4</ListItem>
 
 
 
