@@ -81,9 +81,9 @@ const HomeScreen = React.memo(() => {
 
 
   return (
-    <LinearGradient start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }} colors={['#3a3a3a', '#000000']} style={{ flex: 1 }} >
+    <LinearGradient start={{ x: 0, y: 0 }} end={{ x: 1, y: .85 }} colors={['#3a3a3a', '#000000']} style={{ flex: 1 }} >
       <ScrollView style={{ flex: 1 }}>
-        <SafeAreaView style={{ flex: 1 }}>
+        <SafeAreaView style={{ flex: 1, borderColor: 'black' }}>
           <View style={{ alignItems: 'center', marginTop: 1, }}>
             <LKText weight={"medium"} style={{ fontSize: 30, color: 'white' }}>Dashboard</LKText>
 
@@ -109,8 +109,7 @@ const HomeScreen = React.memo(() => {
             <ListItem>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Modi qui dolore, totam natus magni alias suscipit quia eum nihil! Consectetur incidunt laboriosam facere labore quos possimus in animi culpa quam?</ListItem>
             <ListItem>Rob is the goat</ListItem>
             <ListItem>Rob is the goa</ListItem>
-            <ListItem>Rob is the goat</ListItem>
-            <ListItem>Rob is the goererererer4</ListItem>
+
 
 
 

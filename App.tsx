@@ -18,15 +18,16 @@ import {
   View,
 } from 'react-native';
 import HomeScreen from './src/screens/HomeScreen/HomeScreen';
+import { faHome, faUser, faList, faPlusCircle, faUserPlus } from '@fortawesome/free-solid-svg-icons';
+import AppNavigator from './src/nav/appnav';
+
+
 
 
 const App = () => {
   const isDarkMode = useColorScheme() === 'dark';
+  return <AppNavigator />;
 
-  return (
-    
-    <HomeScreen />
-  );
 }
 
 
