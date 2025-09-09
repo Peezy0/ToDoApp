@@ -5,6 +5,8 @@
  * @format
  */
 
+import 'react-native-gesture-handler';
+import 'react-native-reanimated'; // safe to import at top; helps with initialization 
 import React from 'react';
 import {
   Alert,

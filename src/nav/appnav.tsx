@@ -7,12 +7,43 @@ import HomeScreen from '../screens/HomeScreen/HomeScreen';
 import ProfileScreen from '../screens/Profile/ProfileScreen';
 import TasksScreen from '../screens/Tasks/TasksScreen';
 import AddFriendScreen from '../screens/AddFriend/AddFriendScreen';
-import { ColorProperties } from 'react-native-reanimated/lib/typescript/Colors';
+import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs'
+import Projects from '../screens/Tasks/Projects';
+import Task from '../screens/Tasks/Task';
+
+
+const TopTab = createMaterialTopTabNavigator();
+function TopBarGroup() {
+    return (
+        <TopTab.Navigator
+
+        >
+            <TopTab.Screen
+                name="Projects"
+                component={Projects}
+                options={{ title: 'Projects' }}
+            />
+            <TopTab.Screen
+                name="MyTasks"
+                component={Task}
+                options={{ title: 'Tasks' }}
+            />
+        </TopTab.Navigator>
+
+
+
+
+
+    )
+}
+
+
 
 const Tab = createBottomTabNavigator();
 export default function AppNavigator() {
     return (
         <NavigationContainer>
+
             <Tab.Navigator
                 screenOptions={({ route }) => ({
                     headerShown: false,
@@ -41,9 +72,10 @@ export default function AppNavigator() {
                 />
                 <Tab.Screen
                     name="Tasks"
-                    component={TasksScreen}
+                    component={TopBarGroup}
                     options={{
-                        tabBarIcon: ({ color }: { color: string, size: number }) => (
+                        headerShown: true,
+                        tabBarIcon: ({ color }: { color: string, size: number }, headerStyle: { backgroundColor: 'black' }) => (
                             <FontAwesomeIcon icon={faList} size={23} color={color} />
                         ),
                     }}
