@@ -2,7 +2,7 @@ import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { NavigationContainer } from '@react-navigation/native';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
-import { faHome, faUser, faList, faPlusCircle, faUserPlus, faUserGroup } from '@fortawesome/free-solid-svg-icons';
+import { faHome, faUser, faList, faPlusCircle, faUserPlus, faUserGroup, faPlus } from '@fortawesome/free-solid-svg-icons';
 import HomeScreen from '../screens/HomeScreen/HomeScreen';
 import ProfileScreen from '../screens/Profile/ProfileScreen';
 import TasksScreen from '../screens/Tasks/TasksScreen';
@@ -10,13 +10,20 @@ import AddFriendScreen from '../screens/AddFriend/AddFriendScreen';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs'
 import Projects from '../screens/Tasks/Projects';
 import Task from '../screens/Tasks/Task';
+import { TouchableOpacity } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import Addtask from '../screens/Tasks/AddTask';
 
 
 const TopTab = createMaterialTopTabNavigator();
 function TopBarGroup() {
     return (
         <TopTab.Navigator
-
+            screenOptions={{
+                tabBarStyle: { backgroundColor: '#3d4147', elevation: 0, shadowOpacity: 0, borderBottomWidth: 0 },
+                tabBarIndicatorStyle: { backgroundColor: 'black' },
+                swipeEnabled: true,
+            }}
         >
             <TopTab.Screen
                 name="Projects"
@@ -73,16 +80,22 @@ export default function AppNavigator() {
                 <Tab.Screen
                     name="Tasks"
                     component={TopBarGroup}
-                    options={{
+                    options={({ navigation }) => ({
                         headerShown: true,
-                        tabBarIcon: ({ color }: { color: string, size: number }, headerStyle: { backgroundColor: 'black' }) => (
+                        headerRight: () => (
+                            <TouchableOpacity onPress={() => navigation.navigate('AddTask')}>
+                                <FontAwesomeIcon icon={faPlus} size={25} color="#cfd8e8" style={{ marginRight: 15 }} />
+                            </TouchableOpacity>
+                        ),
+                        title: 'Tasks',
+                        tabBarIcon: ({ color }: { color: string, size: number }) => (
                             <FontAwesomeIcon icon={faList} size={23} color={color} />
                         ),
-                    }}
+                    })}
                 />
                 <Tab.Screen
                     name="AddTask"
-                    component={HomeScreen} // Change to actual AddTaskScreen later
+                    component={Addtask} // Change to actual AddTaskScreen later
                     options={{
                         title: 'New Task',
                         tabBarIcon: ({ color }: { color: string, size: number }) => (

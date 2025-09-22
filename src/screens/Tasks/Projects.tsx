@@ -17,7 +17,7 @@ const Projects = React.memo(() => {
                         <TouchableOpacity
                             style={styles.button}
                         >
-                            <LKText style={{ flexDirection: 'row', justifyContent: 'center', paddingLeft: 30 }}>Pojects</LKText>
+                            <LKText style={{ flexDirection: 'row', justifyContent: 'center', paddingLeft: 30 }}>Projects</LKText>
                         </TouchableOpacity>
 
 
