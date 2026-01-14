@@ -11,7 +11,7 @@ const TaskScreen = React.memo(() => {
             <ScrollView>
                 <SafeAreaView>
                     <View style={{ flexDirection: 'row', justifyContent: 'center', marginTop: 10 }}>
-                        <LKText weight={'bold'} style={{ fontSize: 20, color: '#cfd8e8' }}>Taks</LKText>
+                        <LKText weight={'bold'} style={{ fontSize: 20, color: '#0046c0ff' }}>Taks</LKText>
                     </View>
                     <View style={{ flex: 1, flexDirection: 'row', marginTop: 50, justifyContent: 'space-evenly' }}>
 

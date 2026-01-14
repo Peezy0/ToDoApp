@@ -79,12 +79,12 @@ export default function AppNavigator() {
                 />
                 <Tab.Screen
                     name="Tasks"
-                    component={TopBarGroup}
+                    component={TasksScreen}
                     options={({ navigation }) => ({
-                        headerShown: true,
+                        headerShown: false,
                         headerRight: () => (
                             <TouchableOpacity onPress={() => navigation.navigate('AddTask')}>
-                                <FontAwesomeIcon icon={faPlus} size={25} color="#cfd8e8" style={{ marginRight: 15 }} />
+                                <FontAwesomeIcon icon={faPlus} size={25} color="#525355ff" style={{ marginRight: 15 }} />
                             </TouchableOpacity>
                         ),
                         title: 'Tasks',
