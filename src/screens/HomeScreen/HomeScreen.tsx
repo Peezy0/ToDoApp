@@ -81,7 +81,7 @@ const HomeScreen = React.memo(() => {
 
 
   return (
-    <LinearGradient start={{ x: 0, y: 0 }} end={{ x: 1, y: .85 }} colors={['#3a3a3a', '#000000']} style={{ flex: 1 }} >
+    <LinearGradient start={{ x: 0, y: 0 }} end={{ x: 1, y: .85 }} colors={['#000000ff', '#000000']} style={{ flex: 1 }} >
       <ScrollView style={{ flex: 1 }}>
         <SafeAreaView style={{ flex: 1, borderColor: 'black' }}>
           <View style={{ alignItems: 'center', marginTop: 1, }}>

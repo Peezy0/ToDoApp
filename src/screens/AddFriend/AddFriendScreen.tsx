@@ -11,22 +11,22 @@ const AddFriendScreen = React.memo(() => {
 
     const renderFriendsContent = () => (
         <View style={{ flex: 1, padding: 16 }}>
-            <Text style={{ color: '#cfd8e8', fontSize: 16, marginBottom: 20 }}>Friends</Text>
-            <Text style={{ color: '#cfd8e8', opacity: 0.7 }}>Your friends will appear here</Text>
+            <Text style={{ color: '#ffffffff', fontSize: 16, marginBottom: 20 }}>Friends</Text>
+            <Text style={{ color: '#ffffffff', opacity: 0.7 }}>Your friends will appear here</Text>
             {/* Add your friends list here */}
         </View>
     );
 
     const renderGroupsContent = () => (
         <View style={{ flex: 1, padding: 16 }}>
-            <Text style={{ color: '#cfd8e8', fontSize: 16, marginBottom: 20 }}>Task Groups</Text>
-            <Text style={{ color: '#cfd8e8', opacity: 0.7 }}>Your task groups will appear here</Text>
+            <Text style={{ color: '#ffffffff', fontSize: 16, marginBottom: 20 }}>Task Groups</Text>
+            <Text style={{ color: '#ffffffff', opacity: 0.7 }}>Your task groups will appear here</Text>
             {/* Add your groups list here */}
         </View>
     );
 
     return (
-        <LinearGradient start={{ x: 0, y: 0 }} end={{ x: 1, y: .85 }} colors={['#3a3a3a', '#000000']} style={{ flex: 1 }} >
+        <LinearGradient start={{ x: 0, y: 0 }} end={{ x: 1, y: .85 }} colors={['#000000ff', '#000000']} style={{ flex: 1 }} >
             <SafeAreaView style={{ flex: 1 }}>
                 {/* Custom Header */}
                 <View style={{
@@ -47,7 +47,7 @@ const AddFriendScreen = React.memo(() => {
                     <Text style={{
                         fontSize: 18,
                         fontWeight: 'bold',
-                        color: '#cfd8e8'
+                        color: '#ffffffff'
                     }}>{activeTab === 'friends' ? 'Friends' : 'Groups'}</Text>
 
                     {/* Right: Add Icon */}
@@ -55,7 +55,7 @@ const AddFriendScreen = React.memo(() => {
                         <FontAwesomeIcon
                             icon={activeTab === 'friends' ? faUserPlus : faUsers}
                             size={25}
-                            color="#cfd8e8"
+                            color="#ffffffff"
                         />
                     </TouchableOpacity>
                 </View>
