@@ -21,8 +21,13 @@ const TaskStatCard = React.memo<{ title: string; count: string; }>(({ title, cou
     );
 });
 
-const TabSwitcher = React.memo(() => {
-    const [activeTab, setActiveTab] = useState<'Priorities' | 'Task' | 'Project'>('Priorities');
+type TabSwitcherProps = {
+    activeTab: 'Priorities' | 'Task' | 'Project';
+    onTabChange: (tab: 'Priorities' | 'Task' | 'Project') => void;
+};
+
+const TabSwitcher = React.memo(({ activeTab, onTabChange }: TabSwitcherProps) => {
+    const tabs = ['Priorities', 'Task', 'Project'] as const;
 
     return (
         <View style={{
@@ -32,12 +37,35 @@ const TabSwitcher = React.memo(() => {
             marginHorizontal: 20,
             marginTop: 20
         }}>
-
+            {tabs.map((tab) => (
+                <TouchableOpacity
+                    key={tab}
+                    onPress={() => onTabChange(tab)}
+                    style={{
+                        flex: 1,
+                        paddingVertical: 12,
+                        paddingHorizontal: 16,
+                        alignItems: 'center',
+                        borderBottomWidth: activeTab === tab ? 2 : 0,
+                        borderBottomColor: activeTab === tab ? '#ffffffff' : 'transparent',
+                    }}
+                >
+                    <Text style={{
+                        color: activeTab === tab ? '#fff' : '#888',
+                        fontSize: 14,
+                        fontWeight: activeTab === tab ? 'bold' : 'normal',
+                    }}>
+                        {tab}
+                    </Text>
+                </TouchableOpacity>
+            ))}
         </View>
     );
 });
 
 const ProfileScreen = React.memo(() => {
+    const [activeTab, setActiveTab] = useState<'Priorities' | 'Task' | 'Project'>('Priorities');
+
     return (
         <LinearGradient start={{ x: 0, y: 0 }} end={{ x: 1, y: .85 }} colors={['#000000ff', '#000000']} style={{ flex: 1 }} >
             <SafeAreaView style={{ flex: 1 }}>
@@ -105,7 +133,14 @@ const ProfileScreen = React.memo(() => {
                         <TaskStatCard title="Priority" count="5" />
                     </View>
 
-                    <TabSwitcher />
+
+
+
+
+                    <TabSwitcher
+                        activeTab={activeTab}
+                        onTabChange={setActiveTab}
+                    />
                 </ScrollView>
             </SafeAreaView>
         </LinearGradient>

@@ -12,6 +12,7 @@ const AddTask = React.memo(() => {
     const [location, setLocation] = useState('');
     const [alarmEnabled, setAlarmEnabled] = useState(false);
     const [isGroupTask, setIsGroupTask] = useState(false);
+    const [isProjectTask, setIsProjectTask] = useState(false);
     const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
     const [selectedPriority, setSelectedPriority] = useState<'Low' | 'High'>('High');
     const [selectedDate, setSelectedDate] = useState(new Date());
@@ -23,7 +24,9 @@ const AddTask = React.memo(() => {
     const [showAddCategoryModal, setShowAddCategoryModal] = useState(false);
     const [newCategoryName, setNewCategoryName] = useState('');
     const [selectedColor, setSelectedColor] = useState('#ff6b6b');
-
+    const [showProjectSelector, setShowProjectSelector] = useState(false);
+    const [selectedProject, setSelectedProject] = useState<string | null>(null);
+    const [showTypeSelector, setShowTypeSelector] = useState(false);
 
     // Mock friends data - replace with your actual friends data
     const friends = [
@@ -32,6 +35,15 @@ const AddTask = React.memo(() => {
         { id: '3', name: 'Mike Johnson' },
         { id: '4', name: 'Sarah Williams' },
         { id: '5', name: 'Tom Brown' },
+    ];
+
+    // Mock projects data - replace with your actual projects data
+    const projects = [
+        { id: '1', name: 'Website Redesign' },
+        { id: '2', name: 'Mobile App Dev' },
+        { id: '3', name: 'Marketing Campaign' },
+        { id: '4', name: 'Database Migration' },
+        { id: '5', name: 'Team Onboarding' },
     ];
 
     const [categories, setCategories] = useState([
@@ -63,7 +75,6 @@ const AddTask = React.memo(() => {
                     text: 'Delete',
                     onPress: () => {
                         setCategories(categories.filter(cat => cat.name !== categoryName));
-                        // If the deleted category was selected, unselect it
                         if (selectedCategory === categoryName) {
                             setSelectedCategory(null);
                         }
@@ -139,6 +150,15 @@ const AddTask = React.memo(() => {
         }
     };
 
+    const handleProjectTaskToggle = (value: boolean) => {
+        setIsProjectTask(value);
+        if (value) {
+            setShowProjectSelector(true);
+        } else {
+            setSelectedProject(null);
+        }
+    };
+
     const toggleFriendSelection = (friendId: string) => {
         setSelectedFriends(prev => {
             if (prev.includes(friendId)) {
@@ -156,17 +176,20 @@ const AddTask = React.memo(() => {
         setShowFriendSelector(false);
     };
 
-    // ...existing code...
+    const handleProjectSelectionDone = () => {
+        if (!selectedProject) {
+            setIsProjectTask(false);
+        }
+        setShowProjectSelector(false);
+    };
 
     const handleAddCategory = () => {
         if (newCategoryName.trim()) {
-            // Check if category with the same name already exists
             const categoryExists = categories.some(
                 category => category.name.toLowerCase() === newCategoryName.trim().toLowerCase()
             );
 
             if (categoryExists) {
-                // You can add an alert or toast notification here
                 Alert.alert('A category with this name already exists!');
                 return;
             }
@@ -178,7 +201,12 @@ const AddTask = React.memo(() => {
         }
     };
 
-    // ...existing code...
+    const handleTypeSelect = (type: 'task' | 'project') => {
+        setShowTypeSelector(false);
+        if (type === 'project') {
+            navigation.navigate('AddProject' as never);
+        }
+    };
 
     return (
         <View style={{ flex: 1, backgroundColor: '#000000ff' }}>
@@ -191,10 +219,13 @@ const AddTask = React.memo(() => {
                     paddingHorizontal: 20,
                     paddingVertical: 15,
                 }}>
-                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                    <TouchableOpacity
+                        style={{ flexDirection: 'row', alignItems: 'center' }}
+                        onPress={() => setShowTypeSelector(true)}
+                    >
                         <Text style={{ color: '#fff', fontSize: 24, fontWeight: 'bold' }}>New Task</Text>
                         <FontAwesomeIcon icon={faChevronDown} size={16} color="#888" style={{ marginLeft: 10 }} />
-                    </View>
+                    </TouchableOpacity>
                     <TouchableOpacity onPress={() => navigation.goBack()}>
                         <FontAwesomeIcon icon={faTimes} size={24} color="#fff" />
                     </TouchableOpacity>
@@ -239,201 +270,276 @@ const AddTask = React.memo(() => {
 
                     {/* Categories Section */}
                     <View style={{ marginTop: 30 }}>
+                        <View style={{
+                            flexDirection: 'row',
+                            justifyContent: 'space-between',
+                            alignItems: 'center',
+                            marginBottom: 15,
+                        }}>
+                            <Text style={{ color: '#888', fontSize: 14 }}>Categories</Text>
+                            <TouchableOpacity onPress={() => setShowAddCategoryModal(true)}>
+                                <FontAwesomeIcon icon={faPlus} size={20} color="#fff" />
+                            </TouchableOpacity>
+                        </View>
 
-                        {/* Categories Section */}
-                        <View style={{ marginTop: 30 }}>
-                            <View style={{
-                                flexDirection: 'row',
-                                justifyContent: 'space-between',
-                                alignItems: 'center',
-                                marginBottom: 15,
-                            }}>
-                                <Text style={{ color: '#888', fontSize: 14 }}>Categories</Text>
-                                <TouchableOpacity onPress={() => setShowAddCategoryModal(true)}>
-                                    <FontAwesomeIcon icon={faPlus} size={20} color="#fff" />
-                                </TouchableOpacity>
-                            </View>
-
-                            {categories.map((category, index) => (
-                                <View
-                                    key={index}
+                        {categories.map((category, index) => (
+                            <View
+                                key={index}
+                                style={{
+                                    flexDirection: 'row',
+                                    alignItems: 'center',
+                                    marginBottom: 20,
+                                    backgroundColor: selectedCategory === category.name ? '#2a2a2a' : 'transparent',
+                                    paddingVertical: 8,
+                                    paddingHorizontal: 10,
+                                    borderRadius: 8,
+                                }}
+                            >
+                                <TouchableOpacity
                                     style={{
+                                        flex: 1,
                                         flexDirection: 'row',
                                         alignItems: 'center',
-                                        marginBottom: 20,
-                                        backgroundColor: selectedCategory === category.name ? '#2a2a2a' : 'transparent',
-                                        paddingVertical: 8,
-                                        paddingHorizontal: 10,
-                                        borderRadius: 8,
+                                    }}
+                                    onPress={() => {
+                                        if (selectedCategory === category.name) {
+                                            setSelectedCategory(null);
+                                        } else {
+                                            setSelectedCategory(category.name);
+                                        }
                                     }}
                                 >
-                                    <TouchableOpacity
+                                    <View
                                         style={{
-                                            flex: 1,
-                                            flexDirection: 'row',
-                                            alignItems: 'center',
+                                            width: 4,
+                                            height: 20,
+                                            backgroundColor: category.color,
+                                            borderRadius: 2,
+                                            marginRight: 15,
                                         }}
-                                        onPress={() => {
-                                            // Toggle selection - if already selected, unselect it
-                                            if (selectedCategory === category.name) {
-                                                setSelectedCategory(null);
-                                            } else {
-                                                setSelectedCategory(category.name);
-                                            }
-                                        }}
-                                    >
-                                        <View
-                                            style={{
-                                                width: 4,
-                                                height: 20,
-                                                backgroundColor: category.color,
-                                                borderRadius: 2,
-                                                marginRight: 15,
-                                            }}
-                                        />
-                                        <Text style={{
-                                            color: selectedCategory === category.name ? '#fff' : '#aaa',
-                                            fontSize: 16,
-                                            fontWeight: selectedCategory === category.name ? 'bold' : 'normal',
-                                            flex: 1,
-                                        }}>
-                                            {category.name}
-                                        </Text>
-                                        {selectedCategory === category.name && (
-                                            <FontAwesomeIcon icon={faCheck} size={16} color="#51cf66" />
-                                        )}
-                                    </TouchableOpacity>
-                                    <TouchableOpacity
-                                        onPress={() => handleDeleteCategory(category.name)}
-                                        style={{ marginLeft: 10 }}
-                                    >
-                                        <FontAwesomeIcon icon={faTimes} size={16} color="#ff6b6b" />
-                                    </TouchableOpacity>
-                                </View>
-                            ))}
-                        </View>
-
-                        {/* Group Task Section */}
-                        <View style={{
-                            flexDirection: 'row',
-                            justifyContent: 'space-between',
-                            alignItems: 'center',
-                            marginTop: 20,
-                            marginBottom: 20,
-                        }}>
-                            <View>
-                                <Text style={{ color: '#888', fontSize: 16 }}>Group Task</Text>
-                                {isGroupTask && selectedFriends.length > 0 && (
-                                    <Text style={{ color: '#ffa94d', fontSize: 12, marginTop: 4 }}>
-                                        {selectedFriends.length} friend{selectedFriends.length > 1 ? 's' : ''} selected
+                                    />
+                                    <Text style={{
+                                        color: selectedCategory === category.name ? '#fff' : '#aaa',
+                                        fontSize: 16,
+                                        fontWeight: selectedCategory === category.name ? 'bold' : 'normal',
+                                        flex: 1,
+                                    }}>
+                                        {category.name}
                                     </Text>
-                                )}
+                                    {selectedCategory === category.name && (
+                                        <FontAwesomeIcon icon={faCheck} size={16} color="#51cf66" />
+                                    )}
+                                </TouchableOpacity>
+                                <TouchableOpacity
+                                    onPress={() => handleDeleteCategory(category.name)}
+                                    style={{ marginLeft: 10 }}
+                                >
+                                    <FontAwesomeIcon icon={faTrash} size={16} color="#ff6b6b" />
+                                </TouchableOpacity>
                             </View>
-                            <Switch
-                                value={isGroupTask}
-                                onValueChange={handleGroupTaskToggle}
-                                trackColor={{ false: '#3e3e3e', true: '#ffa94d' }}
-                                thumbColor={isGroupTask ? '#fff' : '#f4f3f4'}
-                            />
-                        </View>
+                        ))}
+                    </View>
 
-                        {/* Alarm Section */}
-                        <View style={{
+                    {/* Group Task Section */}
+                    <View style={{
+                        flexDirection: 'row',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                        marginTop: 20,
+                        marginBottom: 20,
+                    }}>
+                        <View>
+                            <Text style={{ color: '#888', fontSize: 16 }}>Group Task</Text>
+                            {isGroupTask && selectedFriends.length > 0 && (
+                                <Text style={{ color: '#ffa94d', fontSize: 12, marginTop: 4 }}>
+                                    {selectedFriends.length} friend{selectedFriends.length > 1 ? 's' : ''} selected
+                                </Text>
+                            )}
+                        </View>
+                        <Switch
+                            value={isGroupTask}
+                            onValueChange={handleGroupTaskToggle}
+                            trackColor={{ false: '#3e3e3e', true: '#ffa94d' }}
+                            thumbColor={isGroupTask ? '#fff' : '#f4f3f4'}
+                        />
+                    </View>
+
+                    {/* Project Task Section */}
+                    <View style={{
+                        flexDirection: 'row',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                        marginBottom: 20,
+                    }}>
+                        <View>
+                            <Text style={{ color: '#888', fontSize: 16 }}>Project Task</Text>
+                            {isProjectTask && selectedProject && (
+                                <Text style={{ color: '#5c7cfa', fontSize: 12, marginTop: 4 }}>
+                                    {selectedProject}
+                                </Text>
+                            )}
+                        </View>
+                        <Switch
+                            value={isProjectTask}
+                            onValueChange={handleProjectTaskToggle}
+                            trackColor={{ false: '#3e3e3e', true: '#5c7cfa' }}
+                            thumbColor={isProjectTask ? '#fff' : '#f4f3f4'}
+                        />
+                    </View>
+
+                    {/* Alarm Section */}
+                    <View style={{
+                        flexDirection: 'row',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                        marginBottom: 20,
+                    }}>
+                        <Text style={{ color: '#888', fontSize: 16 }}>Alarm</Text>
+                        <Switch
+                            value={alarmEnabled}
+                            onValueChange={setAlarmEnabled}
+                            trackColor={{ false: '#3e3e3e', true: '#5c7cfa' }}
+                            thumbColor={alarmEnabled ? '#fff' : '#f4f3f4'}
+                        />
+                    </View>
+
+                    {/* Date Section */}
+                    <TouchableOpacity
+                        style={{
                             flexDirection: 'row',
                             justifyContent: 'space-between',
                             alignItems: 'center',
                             marginBottom: 20,
-                        }}>
-                            <Text style={{ color: '#888', fontSize: 16 }}>Alarm</Text>
-                            <Switch
-                                value={alarmEnabled}
-                                onValueChange={setAlarmEnabled}
-                                trackColor={{ false: '#3e3e3e', true: '#5c7cfa' }}
-                                thumbColor={alarmEnabled ? '#fff' : '#f4f3f4'}
-                            />
+                        }}
+                        onPress={handleDatePress}
+                    >
+                        <Text style={{ color: '#888', fontSize: 16 }}>Date</Text>
+                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                            <Text style={{ color: '#fff', fontSize: 14, marginRight: 10 }}>
+                                {formatDate(selectedDate)}
+                            </Text>
+                            <FontAwesomeIcon icon={faChevronDown} size={14} color="#888" />
                         </View>
+                    </TouchableOpacity>
 
-                        {/* Date Section */}
-                        <TouchableOpacity
-                            style={{
-                                flexDirection: 'row',
-                                justifyContent: 'space-between',
-                                alignItems: 'center',
-                                marginBottom: 20,
-                            }}
-                            onPress={handleDatePress}
-                        >
-                            <Text style={{ color: '#888', fontSize: 16 }}>Date</Text>
-                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                <Text style={{ color: '#fff', fontSize: 14, marginRight: 10 }}>
-                                    {formatDate(selectedDate)}
-                                </Text>
-                                <FontAwesomeIcon icon={faChevronDown} size={14} color="#888" />
-                            </View>
-                        </TouchableOpacity>
+                    {/* Date Picker */}
+                    {showDatePicker && (
+                        <DateTimePicker
+                            value={selectedDate}
+                            mode={Platform.OS === 'ios' ? 'datetime' : 'date'}
+                            display={Platform.OS === 'ios' ? 'spinner' : 'default'}
+                            onChange={onDateChange}
+                            textColor="#fff"
+                            minimumDate={new Date()}
+                        />
+                    )}
 
-                        {/* Date Picker */}
-                        {showDatePicker && (
-                            <DateTimePicker
-                                value={selectedDate}
-                                mode={Platform.OS === 'ios' ? 'datetime' : 'date'}
-                                display={Platform.OS === 'ios' ? 'spinner' : 'default'}
-                                onChange={onDateChange}
-                                textColor="#fff"
-                                minimumDate={new Date()}
-                            />
-                        )}
+                    {/* Time Picker (Android only) */}
+                    {showTimePicker && Platform.OS === 'android' && (
+                        <DateTimePicker
+                            value={selectedDate}
+                            mode="time"
+                            display="default"
+                            onChange={onTimeChange}
+                            textColor="#fff"
+                        />
+                    )}
 
-                        {/* Time Picker (Android only) */}
-                        {showTimePicker && Platform.OS === 'android' && (
-                            <DateTimePicker
-                                value={selectedDate}
-                                mode="time"
-                                display="default"
-                                onChange={onTimeChange}
-                                textColor="#fff"
-                            />
-                        )}
+                    {/* Priority Section */}
+                    <TouchableOpacity
+                        style={{
+                            flexDirection: 'row',
+                            justifyContent: 'space-between',
+                            alignItems: 'center',
+                            marginBottom: 40,
+                        }}
+                        onPress={() => setShowPriorityModal(true)}
+                    >
+                        <Text style={{ color: '#888', fontSize: 16 }}>Priority</Text>
+                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                            <Text style={{
+                                color: selectedPriority === 'High' ? '#ff6b9d' : '#51cf66',
+                                fontSize: 14,
+                                marginRight: 10
+                            }}>
+                                {selectedPriority}
+                            </Text>
+                            <FontAwesomeIcon icon={faChevronDown} size={14} color="#888" />
+                        </View>
+                    </TouchableOpacity>
 
-                        {/* Priority Section */}
-                        <TouchableOpacity
-                            style={{
-                                flexDirection: 'row',
-                                justifyContent: 'space-between',
-                                alignItems: 'center',
-                                marginBottom: 40,
-                            }}
-                            onPress={() => setShowPriorityModal(true)}
-                        >
-                            <Text style={{ color: '#888', fontSize: 16 }}>Priority</Text>
-                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                <Text style={{
-                                    color: selectedPriority === 'High' ? '#ff6b9d' : '#51cf66',
-                                    fontSize: 14,
-                                    marginRight: 10
-                                }}>
-                                    {selectedPriority}
-                                </Text>
-                                <FontAwesomeIcon icon={faChevronDown} size={14} color="#888" />
-                            </View>
-                        </TouchableOpacity>
-
-                        {/* Create Task Button */}
-                        <TouchableOpacity
-                            style={{
-                                backgroundColor: '#f0f0f0',
-                                borderRadius: 12,
-                                paddingVertical: 18,
-                                alignItems: 'center',
-                                marginBottom: 40,
-                            }}
-                            onPress={() => navigation.goBack()}
-                        >
-                            <Text style={{ color: '#1a1a1a', fontSize: 16, fontWeight: 'bold' }}>CREATE TASK</Text>
-                        </TouchableOpacity>
-                    </View>
+                    {/* Create Task Button */}
+                    <TouchableOpacity
+                        style={{
+                            backgroundColor: '#f0f0f0',
+                            borderRadius: 12,
+                            paddingVertical: 18,
+                            alignItems: 'center',
+                            marginBottom: 40,
+                        }}
+                        onPress={() => navigation.goBack()}
+                    >
+                        <Text style={{ color: '#1a1a1a', fontSize: 16, fontWeight: 'bold' }}>CREATE TASK</Text>
+                    </TouchableOpacity>
                 </ScrollView>
             </SafeAreaView>
+
+            {/* Type Selector Modal */}
+            <Modal
+                visible={showTypeSelector}
+                transparent={true}
+                animationType="fade"
+                onRequestClose={() => setShowTypeSelector(false)}
+            >
+                <TouchableOpacity
+                    style={{
+                        flex: 1,
+                        backgroundColor: 'rgba(0,0,0,0.7)',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                    }}
+                    activeOpacity={1}
+                    onPress={() => setShowTypeSelector(false)}
+                >
+                    <View style={{
+                        backgroundColor: '#2a2a2a',
+                        borderRadius: 12,
+                        padding: 20,
+                        width: '80%',
+                    }}>
+                        <Text style={{ color: '#fff', fontSize: 18, fontWeight: 'bold', marginBottom: 20 }}>
+                            What would you like to create?
+                        </Text>
+
+                        <TouchableOpacity
+                            style={{
+                                flexDirection: 'row',
+                                justifyContent: 'space-between',
+                                alignItems: 'center',
+                                paddingVertical: 15,
+                                borderBottomWidth: 1,
+                                borderBottomColor: '#444',
+                            }}
+                            onPress={() => handleTypeSelect('task')}
+                        >
+                            <Text style={{ color: '#fff', fontSize: 16 }}>New Task</Text>
+                            <FontAwesomeIcon icon={faCheck} size={16} color="#51cf66" />
+                        </TouchableOpacity>
+
+                        <TouchableOpacity
+                            style={{
+                                flexDirection: 'row',
+                                justifyContent: 'space-between',
+                                alignItems: 'center',
+                                paddingVertical: 15,
+                            }}
+                            onPress={() => handleTypeSelect('project')}
+                        >
+                            <Text style={{ color: '#5c7cfa', fontSize: 16 }}>New Project</Text>
+                        </TouchableOpacity>
+                    </View>
+                </TouchableOpacity>
+            </Modal>
 
             {/* Priority Modal */}
             <Modal
@@ -670,6 +776,70 @@ const AddTask = React.memo(() => {
                                     </View>
                                     {selectedFriends.includes(item.id) && (
                                         <FontAwesomeIcon icon={faCheck} size={20} color="#ffa94d" />
+                                    )}
+                                </TouchableOpacity>
+                            )}
+                        />
+                    </View>
+                </View>
+            </Modal>
+
+            {/* Project Selector Modal */}
+            <Modal
+                visible={showProjectSelector}
+                transparent={true}
+                animationType="slide"
+                onRequestClose={() => setShowProjectSelector(false)}
+            >
+                <View style={{
+                    flex: 1,
+                    backgroundColor: 'rgba(0,0,0,0.7)',
+                    justifyContent: 'flex-end',
+                }}>
+                    <View style={{
+                        backgroundColor: '#1a1a1a',
+                        borderTopLeftRadius: 20,
+                        borderTopRightRadius: 20,
+                        paddingTop: 20,
+                        paddingBottom: 40,
+                        maxHeight: '80%',
+                    }}>
+                        {/* Header */}
+                        <View style={{
+                            flexDirection: 'row',
+                            justifyContent: 'space-between',
+                            alignItems: 'center',
+                            paddingHorizontal: 20,
+                            marginBottom: 20,
+                        }}>
+                            <Text style={{ color: '#fff', fontSize: 20, fontWeight: 'bold' }}>
+                                Select Project
+                            </Text>
+                            <TouchableOpacity onPress={handleProjectSelectionDone}>
+                                <Text style={{ color: '#5c7cfa', fontSize: 16, fontWeight: 'bold' }}>Done</Text>
+                            </TouchableOpacity>
+                        </View>
+
+                        {/* Projects List */}
+                        <FlatList
+                            data={projects}
+                            keyExtractor={(item) => item.id}
+                            renderItem={({ item }) => (
+                                <TouchableOpacity
+                                    style={{
+                                        flexDirection: 'row',
+                                        alignItems: 'center',
+                                        justifyContent: 'space-between',
+                                        paddingVertical: 15,
+                                        paddingHorizontal: 20,
+                                        borderBottomWidth: 1,
+                                        borderBottomColor: '#2a2a2a',
+                                    }}
+                                    onPress={() => setSelectedProject(item.name)}
+                                >
+                                    <Text style={{ color: '#fff', fontSize: 16 }}>{item.name}</Text>
+                                    {selectedProject === item.name && (
+                                        <FontAwesomeIcon icon={faCheck} size={20} color="#5c7cfa" />
                                     )}
                                 </TouchableOpacity>
                             )}
