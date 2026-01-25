@@ -7,7 +7,7 @@ import ListItem from '../../components/General/ListItem';
 
 const TaskScreen = React.memo(() => {
     return (
-        <LinearGradient start={{ x: 0, y: 0 }} end={{ x: 1, y: .85 }} colors={['#3a3a3a', '#625959ff']} style={{ flex: 1 }} >
+        <LinearGradient start={{ x: 0, y: 0 }} end={{ x: 1, y: .85 }} colors={['#000000ff', '#000000ff']} style={{ flex: 1 }} >
             <ScrollView>
                 <SafeAreaView>
                     <View style={{ flexDirection: 'row', justifyContent: 'center', marginTop: 10 }}>
@@ -21,8 +21,12 @@ const TaskScreen = React.memo(() => {
             </ScrollView>
         </LinearGradient>
     )
+    
+
+    return (
 
 
+    );
 });
 const styles = StyleSheet.create({
     button: {
