@@ -2,7 +2,11 @@ import { StyleSheet, SafeAreaView, ScrollView, Text, TouchableOpacity, View, Mod
 import React, { useState } from 'react';
 import LinearGradient from 'react-native-linear-gradient';
 import { LKText } from '../../components/General';
+import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
+import { faChevronDown } from '@fortawesome/free-solid-svg-icons';
 
+
+import { task } from '../../types/tasks';
 const TaskScreen = React.memo(() => {
     // ============================================
     // STATE MANAGEMENT
@@ -75,7 +79,7 @@ const TaskScreen = React.memo(() => {
     //   );
     // };
 
-    const renderTaskCard = (task) => {
+    const renderTaskCard = (task: task) => {
         return (
             <TouchableOpacity
                 key={task.id}
@@ -124,11 +128,14 @@ const TaskScreen = React.memo(() => {
                     {/* Display: Current view name (Tasks or Projects) with down arrow icon */}
                     <TouchableOpacity
                         style={styles.headerButton}
-                        onPress={() => {/* TODO: Call toggleDropdown function */ }}
+                        onPress={() => { toggleDropdown() }}
                     >
                         {/* TODO: Show current view text (e.g., "Tasks" or "Projects") */}
-                        {/* TODO: Add down arrow icon (▼) next to text */}
-                        {/* HINT: Use LKText component for styling */}
+                        <LKText weight={'bold'} style={{ color: 'white', fontSize: 25 }}>
+                            {currentView === 'tasks' ? 'Tasks' : 'Projects'}
+                        </LKText>
+                        <FontAwesomeIcon icon={faChevronDown} size={16} color="#888" style={{ marginLeft: 5 }} />
+
                     </TouchableOpacity>
 
                     {/* ============================================ */}
@@ -157,8 +164,27 @@ const TaskScreen = React.memo(() => {
 
                         </View>
                     ) */}
+                    {showDropdown && (
+                        <View style={styles.dropdownMenu}>
+
+                            <TouchableOpacity
+                                style={styles.dropdownItem}
+                                onPress={() => switchView('tasks')}
+                            >
+                                <Text style={styles.dropdownText}>Tasks</Text>
+                            </TouchableOpacity>
+
+                            <TouchableOpacity
+                                style={styles.dropdownItem}
+                                onPress={() => switchView('projects')}
+                            >
+                                <Text style={styles.dropdownText}>Projects</Text>
+                            </TouchableOpacity>
+                        </View>
+                    )}
 
                 </View>
+
 
                 {/* ============================================ */}
                 {/* MAIN CONTENT AREA */}
@@ -272,8 +298,11 @@ const styles = StyleSheet.create({
 
     // TODO: Header button (Tasks/Projects dropdown trigger)
     headerButton: {
-        // TODO: Style the touchable area
-        // TODO: Add padding, flexDirection: 'row', alignItems: 'center'
+        flexDirection: 'row',      // Makes items horizontal
+        alignItems: 'center',      // Vertically centers them
+        justifyContent: 'flex-start',  // Horizontally centers them
+        padding: 16,
+        paddingLeft: 25,
     },
 
     // TODO: Dropdown menu container
